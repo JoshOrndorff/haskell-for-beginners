@@ -1,6 +1,8 @@
 -- Rewrite your implementation of reverse from earlier
 -- using a case expression.
-
+reverse' :: [a] -> [a]
+reverse' items = case items of [] -> []
+                               (x:xs) -> (reverse' xs) ++ [x]
 
 -- Write a function to greet people based on their names.
 -- The function should:
@@ -14,5 +16,9 @@
 --        *inside* your case experesion.
 
 greeting :: String -> String
-greeting name = undefined
+greeting name = case name of "Bob" -> "I used to be named that too."
+                             'Q':rest -> "That's a stupid name."
+                             other
+                               | length other <= 3 -> "Get a real name."
+                               | otherwise -> "Hello " ++ name
 
