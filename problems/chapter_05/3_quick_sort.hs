@@ -4,8 +4,13 @@
 -- HINT: try using two functions, inOrder and bubbleSort
 
 inOrder :: (Ord a) => [a] -> Bool
-inOrder = undefined
+inOrder [] = True
+inorder _:[] = True
+inorder x:y:zs | x < y = inOrder y:zs
+               | otherwise = False
+
 
 bubbleSort :: (Ord a) => [a] -> [a]
-bubbleSort = undefined
-
+bubbleSort l | inOrder l = l
+bubbleSort x:y:zs | x < y = y: bubbleSort x:zs
+                  | otherwise x: bubbleSort y:zs
