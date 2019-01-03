@@ -22,5 +22,5 @@ maxPairElement [(x, y)] = max x y
 maxPairElement ((x, y):pairs)
   | headMax > otherMax = headMax
   | otherwise = otherMax
-    where headMax = max x y 
+    where headMax = max x y
           otherMax = maxPairElement pairs
