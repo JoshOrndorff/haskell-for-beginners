@@ -10,8 +10,16 @@
 -- time pad, with each key digit being added to the message digits.
 -- Write a function to recover the encrypted message.
 --
+import Data.Char
+import Data.Function (on)
 
 cipherText = "[pr\128n\128i||-3F|wy,Hn\129xqlys\DEL\DEL'-q|ypys\129q.-`r}ur\129\129,o\DELrr~s;"
 key = "c0ded"
 
 
+decrypt k c =
+  let
+    k' = map digitToInt $ cycle k
+    c' = map ord c
+  in
+    map chr $ zipWith (-) (c') (k')
