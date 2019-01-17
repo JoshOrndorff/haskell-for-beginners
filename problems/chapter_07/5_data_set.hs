@@ -9,6 +9,8 @@
 -- Find the set of all letters that do not appear in the sonnet.
 -- Find the set of all letters that appear on every line of the sonnet.
 
+import qualified Data.Set as Set
+
 sonnetCXXX =
  "My mistress' eyes are nothing like the sun;\n" ++
  "Cornal is far more red, than her lips red:\n" ++
@@ -24,4 +26,8 @@ sonnetCXXX =
  "My mistress, when she walks, treads on the ground:\n" ++
  "   And yet by heaven, I think my love as rare,\n" ++
  "   As any she belied with false compare."
+allLetters = Set.fromList $ ['a'..'z'] ++ ['A'..'Z']
+sonnetLetters = Set.intersection allLetters $ Set.fromList sonnetCXXX
+notInSonnet = Set.difference allLetters sonnetLetters
 
+onEveryLine = foldr Set.intersection allLetters $ map Set.fromList $ lines sonnetCXXX
