@@ -13,3 +13,10 @@
 -- try running this at the ghci prompt:
 --   :set -i<dir that contains the file>
 
+import CiphR
+
+ct1 = caesarEnc 3 "Hello World"
+pt1 = caesarDec 3 ct1
+
+ct2 = otpEnc [3, 4, 5, 6] "Hello World"
+pt2 = otpDec [3, 4, 5, 6] ct2
