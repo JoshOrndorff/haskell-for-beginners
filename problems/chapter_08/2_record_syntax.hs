@@ -17,5 +17,32 @@
 
 import Data.List (find)
 
+data Shot = Shot { horiz :: Float
+                 , vert :: Float
+                 } deriving Show
 
+data Circle = Circle { x :: Float
+                     , y :: Float
+                     , r :: Float
+                     } deriving Show
 
+data Target = Target { area :: Circle
+                     , points :: Int
+                     } deriving Show
+
+scoreOne :: Shot -> [Target] -> Int
+scoreOne Shot {horiz=sx, vert=sy} ts =
+  let
+    isBullseye Target {area=Circle{x=tx, y=ty, r=r}} =
+      (sx-tx)^2 + (sy-ty)^2 <= r ^2
+  in
+    case find isBullseye ts of
+      Just Target {points=p} -> p
+      Nothing -> 0
+
+scoreAll :: [Shot] -> [Target] -> Int
+scoreAll ss ts = foldr scoreNext 0 ss
+  where scoreNext s acc = acc + scoreOne s ts
+
+-- This test case should give 0 points
+-- scoreAll [Shot{horiz=1, vert=10}, Shot{horiz=2, vert=1}] [Target { area=Circle {x=0, y=0, r=2}, points = 9 }]
