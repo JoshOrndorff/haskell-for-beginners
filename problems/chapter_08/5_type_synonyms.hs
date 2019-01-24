@@ -34,8 +34,8 @@ type Result = Either ErrorMsg
 -- Define a version of Data.List.find that returns a Result.
 -- It should return an error if the list is no matching element
 -- is found, with appropriate messages in each case.
-find' :: Eq a => a -> [a] -> Result a
+find' :: Eq a => (a -> Bool) -> [a] -> Result a
 find' _ [] = Left "List was empty"
-find' needle (h:[]) | needle /= h = Left "Item not in list"
-find' needle (h:[]) | needle == h = Right needle
-find' needle (h:aystack) = if needle == h then Right needle else find' needle aystack
+find' f (h:[]) | not (f h) = Left "Item not in list"
+find' f (h:aystack) | f h = Right h
+find' f (h:aystack) | not (f h) = find' f aystack
