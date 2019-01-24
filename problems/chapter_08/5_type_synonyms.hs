@@ -35,5 +35,7 @@ type Result = Either ErrorMsg
 -- It should return an error if the list is no matching element
 -- is found, with appropriate messages in each case.
 find' :: Eq a => a -> [a] -> Result a
-find' _ [] = Left "Element not found in list"
+find' _ [] = Left "List was empty"
+find' needle (h:[]) | needle /= h = Left "Item not in list"
+find' needle (h:[]) | needle == h = Right needle
 find' needle (h:aystack) = if needle == h then Right needle else find' needle aystack
