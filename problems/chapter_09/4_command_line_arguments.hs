@@ -10,4 +10,24 @@
 -- Btw, stdin :: Handle in System.IO ;)
 --
 
-main = return ()
+import System.Environment
+import System.IO
+
+dispatchTable = [("mirror", mirror)
+                ,("reverseLines", reverseLines)
+                ]
+
+mirror = unlines . map reverse . lines
+reverseLines = unlines . reverse . lines
+
+
+main = do
+  args <- getArgs
+  handle <- if length args == 2
+            then openFile (args !! 1) ReadMode
+            else return System.IO.stdin
+  contents <- hGetContents handle
+  let method = lookup (args !! 0) dispatchTable
+  putStrLn $ case method of
+               Just m -> m contents
+               Nothing -> "Invalid Method specified"
