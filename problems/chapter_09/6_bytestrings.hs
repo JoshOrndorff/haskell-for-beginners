@@ -19,9 +19,30 @@ import qualified Data.ByteString.Char8 as BS
 
 main = countVowelsList
 
-countVowelsList = undefined
+countVowelsList = do
+  contents <- getContents
+  print $ length $ filter (`elem` "aeiouAEIOU") contents
 
-countVowelsLazyByteString = undefined
+countVowelsLBS = do
+  contents <- LBS.getContents
+  print $ LBS.length $ LBS.filter (`LBS.elem` (LBS.pack "aeiouAEIOU")) contents
 
-countVowelsByteString = undefined
+countVowelsBS = do
+  contents <- BS.getContents
+  print $ BS.length $ BS.filter (`BS.elem` (BS.pack "aeiouAEIOU")) contents
 
+
+-- Performance when using foldr to count
+--     Bytes   |   List  |   LBS   |    BS
+--       1,000 |
+--   1,000,000 |
+--  20,000,000 |
+
+-- Performance when using length . filter to count
+--     Bytes   |   List  |   LBS   |    BS
+--   1,000,000 |         |         |
+--  20,000,000 |  4.422  |  2.159  |  2.380
+
+-- Finally started to see some difference after taking a bunch of
+-- wrong data when I was only using special versions of _some_
+-- functions. Forgot LBS.elem and LBS.pack
