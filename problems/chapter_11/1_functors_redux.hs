@@ -7,7 +7,8 @@
 -- Use IO as a Functor to define an IO action
 -- that reads a line from stdin as an Int
 --
-getIntLine = undefined
+getIntLine :: IO Int
+getIntLine = fmap read getLine
 
 
 -- Define a function that will read an Int
@@ -15,39 +16,47 @@ getIntLine = undefined
 -- just IO. You are 'lifting' the read
 -- function into the Functor.
 --
-readIntF = undefined
+readIntF :: Functor f => f String -> f Int
+readIntF = fmap read
 
 
 -- Define a new version of getIntLine that
 -- uses readIntF
 --
-getIntLine' = undefined
+getIntLine' = readIntF getLine
 
 
 -- Define a function that doubles an Int
 -- read from a String, using Functions as
 -- Functors.
 --
-readDoubleInt = undefined
+
+-- WTF does "using functions as functors" mean?
+-- read is certainly a funtion. Since I'm fmapping over it, that means its a functor too...
+-- Ohh, this is a simple composition. We knew functions were functors.
+readDoubleInt :: String -> Int
+readDoubleInt = fmap (*2) read
 
 
 -- Define a function that doubles an Int,
 -- which is lifted any Functor.
 --
-doubleIntF = undefined
+doubleIntF :: Functor f => f Int -> f Int
+doubleIntF = fmap (*2)
 
 
 -- Define a new version of readDoubleInt
 -- using doubleIntF
 --
-readDoubleInt' = undefined
+readDoubleInt' = doubleIntF read
 
 
 -- Define an IO Action that reads a line
 -- from stdin as an Int and doubles it,
 -- using your functions above
 --
-getDoubleIntLine = undefined
+getDoubleIntLine :: IO Int
+getDoubleIntLine = fmap readDoubleInt getLine
 
 
 -- Define a function that doubles an Int
@@ -55,13 +64,27 @@ getDoubleIntLine = undefined
 -- Functor. Use functions from above to
 -- make your definition as simple as possble.
 --
-readDoubleIntF = undefined
+readDoubleIntF :: Functor f => f String -> f Int
+readDoubleIntF = fmap readDoubleInt
 
 
 -- Define a new version of getDoubleIntLine
 -- using readDoubleIntF
 --
-getDoubleIntLine' = undefined
+getDoubleIntLine' = readDoubleIntF getLine
+
+
+-- My own additional exercise because I got tripped up on the graph one
+data LinkedList a =
+    Empty
+  | Link a (LinkedList a)
+    deriving (Show, Eq)
+
+sampleList = Link 0 $ Link 1 $ Link 2 $ Empty
+
+instance Functor LinkedList where
+  fmap f Empty = Empty
+  fmap f (Link x y) = Link (f x) ((fmap f) y)
 
 
 -- Define a Functor instance for the Graph
@@ -75,7 +98,9 @@ sampleGraph = Node "Whiskey" [
     Node "Bang" []
   ]
 
-idProof = False
-compositionProof = False
+instance Functor Graph where
+  fmap f (Node x ys) = Node (f x) (fmap (fmap f) ys)
 
 
+idProof = fmap id sampleGraph == id sampleGraph
+compositionProof = fmap (length . reverse) sampleGraph == (fmap length $ fmap reverse sampleGraph)
